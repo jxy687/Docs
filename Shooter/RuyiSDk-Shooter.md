@@ -1,12 +1,10 @@
-### 不要复制粘贴虚拟环境，因为toolchain.cmake写死掉了
-
 ### 开始
 
-- 获取项目
+获取项目
 ```
 git clone https://github.com/WispSnow/SDLShooter.git
 ```
-- 使用 Eclipse 打开项目： File -> Open Projects from File System...
+使用 Eclipse 打开项目： File -> Open Projects from File System...
 
 ![](images/2026-03-05-14-51-27.png)
 
@@ -39,10 +37,15 @@ ruyi venv -t gnu-plct-xthead -e qemu-user-riscv-xthead sipeed-lpi4a ./sipeed-xth
 ruyi venv -t gnu-plct -e qemu-user-riscv-upstream generic ./gnu-plct-venv
 
 ```
+### 移植 sysroot
+如果你有 RISC-V openEuler，比如使用QEMU，并且依赖充足
 
-### 使用虚拟环境构建项目
-- 向 sysroot 添加 SDL2 相关依赖
+在项目目录下创建虚拟环境（已经创建不用二次创建）
+```
+ruyi venv -t gnu-plct -e qemu-user-riscv-upstream generic ./gnu-plct-venv
 
+```
+向虚拟环境下的 sysroot 移植相关依赖
 ```
 # 同步常用运行时库和用户空间（保留符号链接/权限/ACL/xattrs）
 rsync -aHAX --numeric-ids -e "ssh -p 12055" \
@@ -75,144 +78,134 @@ rsync -aHAX --numeric-ids -e "ssh -p 12055" \
   ./gnu-plct-venv/sysroot/usr/sbin/
 
 ```
-
+修改配置文件
 ```
-cd $HOME/RuyiSDKGames/SDLShooter/gnu-plct-venv/sysroot
+cd ./gnu-plct-venv/sysroot
 
 find usr/lib64/cmake -name "*.cmake" -exec sed -i 's|"/usr|"${CMAKE_SYSROOT}/usr|g' {} +
 ```
-
-
-- 激活虚拟环境
+激活虚拟环境
 ```
 source ./gnu-plct-venv/bin/ruyi-activate
 ```
+编译项目
 ```
 mkdir build && cd build
 
-# 使用绝对路径
 cmake -DCMAKE_TOOLCHAIN_FILE=$HOME/RuyiSDKGames/SDLShooter/gnu-plct-venv/toolchain.cmake \
       -DCMAKE_SYSROOT=$HOME/RuyiSDKGames/SDLShooter/gnu-plct-venv/sysroot \
       -DCMAKE_EXE_LINKER_FLAGS="-static-libstdc++ -static-libgcc" \
       ..
 
+make
 ```
-```
-cmake -DCMAKE_TOOLCHAIN_FILE=$HOME/RuyiSDKGames/SDLShooter/gnu-plct-venv/toolchain.cmake \
-      -DCMAKE_SYSROOT=$HOME/RuyiSDKGames/SDLShooter/gnu-plct-venv/sysroot.riscv64-plct-linux-gnu \
-      -DCMAKE_EXE_LINKER_FLAGS="-static-libstdc++ -static-libgcc" \
-      ..
-```
-```
-cmake -DCMAKE_TOOLCHAIN_FILE=$HOME/RuyiSDKGames/SDLShooter/gnu-plct-venv/toolchain.cmake \
-      -DCMAKE_SYSROOT=$HOME/RuyiSDKGames/SDLShooter/gnu-plct-venv/sysroot.riscv64-plct-linux-gnu \
-      -DCMAKE_EXE_LINKER_FLAGS="-static-libstdc++ -static-libgcc" \
-      ..
-```
-
-```
-cmake -DCMAKE_TOOLCHAIN_FILE=$HOME/RuyiSDKGames/SDLShooter/gnu-plct-venv/toolchain.cmake -DCMAKE_SYSROOT=$HOME/RuyiSDKGames/SDLShooter/gnu-plct-venv/sysroot -DCMAKE_EXE_LINKER_FLAGS="-static-libstdc++ -static-libgcc" ..
-
-```
-```
-cmake -DCMAKE_TOOLCHAIN_FILE=$HOME/RuyiSDKGames/SDLShooter-Hand-Witoe/gnu-plct-venv/toolchain.cmake -DCMAKE_SYSROOT=$HOME/RuyiSDKGames/SDLShooter-Hand-Witoe/gnu-plct-venv/sysroot -DCMAKE_EXE_LINKER_FLAGS="-static-libstdc++ -static-libgcc" ..
-
-```
-
-```
-cmake -DCMAKE_TOOLCHAIN_FILE=/home/jxy/RuyiSDKGames/SDLShooter/gnu-plct-venv/toolchain.cmake \
-      -DCMAKE_SYSROOT=/home/jxy/RuyiSDKGames/SDLShooter/gnu-plct-venv/sysroot \
-      -DCMAKE_FIND_ROOT_PATH=/home/jxy/RuyiSDKGames/SDLShooter/gnu-plct-venv/sysroot \
-      -DCMAKE_PREFIX_PATH="/home/jxy/RuyiSDKGames/SDLShooter/gnu-plct-venv/sysroot/usr/lib64/cmake/SDL2;/home/jxy/RuyiSDKGames/SDLShooter/gnu-plct-venv/sysroot/usr/lib64/cmake/SDL2_image;/home/jxy/RuyiSDKGames/SDLShooter/gnu-plct-venv/sysroot/usr/lib64/cmake/SDL2_mixer;/home/jxy/RuyiSDKGames/SDLShooter/gnu-plct-venv/sysroot/usr/lib64/cmake/SDL2_ttf" \
-      -DCMAKE_EXE_LINKER_FLAGS="-static-libstdc++ -static-libgcc" \
-      ..
-
-```
-```
-cmake -DCMAKE_TOOLCHAIN_FILE=$HOME/RuyiSDKGames/CppND-Capstone-Snake-Game/gnu-plct-venv/toolchain.cmake \
-      -DCMAKE_SYSROOT=$HOME/RuyiSDKGames/CppND-Capstone-Snake-Game/gnu-plct-venv/sysroot \
-      -DCMAKE_EXE_LINKER_FLAGS="-static-libstdc++ -static-libgcc" \
-      ..
-```
-```
-cmake -DCMAKE_TOOLCHAIN_FILE=$HOME/RuyiSDKGames/CppND-Capstone-Snake-Game-2/gnu-plct-venv/toolchain.cmake \
-      -DCMAKE_SYSROOT=$HOME/RuyiSDKGames/CppND-Capstone-Snake-Game-2/gnu-plct-venv/sysroot \
-      -DCMAKE_EXE_LINKER_FLAGS="-static-libstdc++ -static-libgcc" \
-      ..
-```
-```
-ruyi-qemu -L ~/RuyiSDKGames/CppND-Capstone-Snake-Game/gnu-plct-venv/sysroot/ ./SnakeGame
-```
-```
-source ../gnu-plct-venv/bin/ruyi-activate
-
-ruyi-qemu -L ~/RuyiSDKGames/SDLShooter/gnu-plct-venv/sysroot/ ./SDLShooter-Linux
-```
-```
-
-env SDL_AUDIODRIVER=dummy LIBGL_ALWAYS_SOFTWARE=1 ruyi-qemu -L ~/RuyiSDKGames/SDLShooter/gnu-plct-venv/sysroot/ ./SDLShooter-Linux
-```
-![失败案例](images/2026-03-05-18-14-34.png)
-执行路径回到项目目录下
+运行项目
 ```
 cd ..
 
 env SDL_AUDIODRIVER=dummy LIBGL_ALWAYS_SOFTWARE=1 ruyi-qemu -L ~/RuyiSDKGames/SDLShooter/gnu-plct-venv/sysroot/ ./build/SDLShooter-Linux
 ```
-```
-cd ..
+![运行结果](images/2026-03-06-10-06-09.png)
 
-env SDL_AUDIODRIVER=dummy LIBGL_ALWAYS_SOFTWARE=1 ruyi-qemu -L ~/RuyiSDKGames/SDLShooter-Hand-Witoe/gnu-plct-venv/sysroot/ ./build/SDLShooter-Linux
+## 手动制作 sysroot
+Ubuntu 上安装必要依赖并初始化 sysroot
 ```
+sudo apt install -y qemu-user-static dnf
+
+mkdir -p ~/oe-sysroot/usr/bin
+sudo cp /usr/bin/qemu-riscv64-static ~/oe-sysroot/usr/bin/
+
+sudo dnf --installroot=$HOME/oe-sysroot \
+           --forcearch=riscv64 \
+           --releasever=24.03 \
+            --repofrompath=oe-base,https://mirrors.huaweicloud.com/openeuler/openEuler-24.03-LTS/OS/riscv64/ \
+            --repofrompath=oe-update,https://mirrors.huaweicloud.com/openeuler/openEuler-24.03-LTS/update/riscv64/ \
+            --disablerepo=* --enablerepo=oe-base,oe-update \
+            --nogpgcheck \
+            --setopt=install_weak_deps=False \
+            install -y bash coreutils dnf openEuler-release
+
+sudo cp /etc/resolv.conf ~/oe-sysroot/etc/resolv.conf
 ```
-env SDL_AUDIODRIVER=dummy LIBGL_ALWAYS_SOFTWARE=1 ruyi-qemu -L ~/RuyiSDKGames/SDLShooter/gnu-plct-venv/sysroot/ ./build/SDLShooter-Linux-hand
+进入 openEuler 安装依赖
 ```
+sudo chroot ~/oe-sysroot /bin/bash
+
+dnf install SDL2-devel freetype-devel libpng-devel wavpack-devel mesa-dri-drivers mesa-libGL-devel libX11-devel zlib-devel openssl-devel libXext-devel libXcursor-devel libXinerama-devel libXi-devel fluidsynth-devel opus-devel opusfile-devel libogg-devel wavpack-devel freetype-devel libpng-devel libjpeg-turbo-devel libwebp-devel libtiff-devel SDL2-static glibc-devel
+
+dnf groupinstall -y "Development Tools"
 ```
-env SDL_AUDIODRIVER=dummy LIBGL_ALWAYS_SOFTWARE=1 ruyi-qemu -L ~/RuyiSDKGames/SDLShooter-Hand/gnu-plct-venv/sysroot/ ./build/SDLShooter-Linux-hand
+手动编译一些依赖,以 libxmp 为例，其余还有（SDL2_mixer，SDL2_ttf，SDL2_image）
 ```
+mkdir PkgDownload && cd PkgDownload
+# 克隆 libxmp 源码
+git clone https://github.com/libxmp/libxmp.git
+cd libxmp
+
+mkdir build && cd build
+cmake .. -DCMAKE_INSTALL_PREFIX=/usr
+make -j$(nproc)
+make install
+ldconfig
+```
+完成后
+```
+exit
+```
+建立软链接
+```
+sudo chown -R $USER:$USER ~/oe-sysroot
+
+cd ~/oe-sysroot
+sudo ln -s usr/lib64 lib
+sudo ln -s lib64 usr/lib
+sudo ln -s ~/oe-sysroot/usr/lib64/dri ~/oe-sysroot/lib64/dri
 
 ```
-env SDL_AUDIODRIVER=dummy LIBGL_ALWAYS_SOFTWARE=1 \
-    ruyi-qemu -L ~/RuyiSDKGames/SDLShooter-Hand/gnu-plct-venv/sysroot/ \
-    -E LD_LIBRARY_PATH=/usr/lib64 \
-    ./build/SDLShooter-Linux-hand
+更改配置文件
 ```
+cd ~/oe-sysroot
 
-
+find usr/lib64/cmake -name "*.cmake" -exec sed -i 's|"/usr|"${CMAKE_SYSROOT}/usr|g' {} +
 ```
-env SDL_AUDIODRIVER=dummy LIBGL_ALWAYS_SOFTWARE=1 \
-    ruyi-qemu -L ~/RuyiSDKGames/SDLShooter/gnu-plct-venv/sysroot/ \
-    -E LD_LIBRARY_PATH=/usr/lib64 \
-    ./build/SDLShooter-Linux-hand
+激活虚拟环境
 ```
-
+source ./gnu-plct-venv/bin/ruyi-activate
 ```
-sudo cp -a ./SDLShooter-Hand-2 ./SDLShooter-Hand-3
 ```
-
+nano toolchain.cmake
 ```
-env SDL_AUDIODRIVER=dummy LIBGL_ALWAYS_SOFTWARE=1 ruyi-qemu -L ~/oe-sysroot ./build/SDLShooter-Linux
-ruyi-qemu -cpu rv64 -L ~/oe-sysroot ./teeworlds_srv
+toolchain.cmake中填入
 ```
+set(CMAKE_SYSTEM_NAME Linux)
+set(CMAKE_SYSTEM_PROCESSOR riscv64)
 
+set(CMAKE_C_COMPILER "riscv64-plct-linux-gnu-gcc")
+set(CMAKE_CXX_COMPILER "riscv64-plct-linux-gnu-g++")
 
-![](images/2026-03-06-10-06-09.png)
+set(CMAKE_SYSROOT "/home/jxy/oe-sysroot")
 
-
-### 编译
+set(CMAKE_FIND_ROOT_PATH "/home/jxy/oe-sysroot")
+set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
+set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
+set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
+set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)
 ```
+编译项目
+```
+mkdir build && cd build
+
 cmake -DCMAKE_TOOLCHAIN_FILE=$PWD/../toolchain.cmake \
       -DCMAKE_SYSROOT=$HOME/oe-sysroot \
       -DCMAKE_EXE_LINKER_FLAGS="-static-libstdc++ -static-libgcc" \
       ..
+
+make
 ```
-![](images/2026-03-06-10-24-33.png)
-显示找不到gcc，首先激活虚拟环境，然后toolchain.cmake的gcc要与虚拟环境中的匹配
+运行项目
+```
+cd ..
 
-![](images/2026-03-06-10-28-07.png)
-显示找不到 SDL之类的，要修改配置文件
-
-find usr/lib64/cmake -name "*.cmake" -exec sed -i 's|"/usr|"${CMAKE_SYSROOT}/usr|g' {} +
-
-对于 sdl_image 要把配置文件里面的，给关上
-![](images/2026-03-06-10-44-31.png)
+env SDL_AUDIODRIVER=dummy LIBGL_ALWAYS_SOFTWARE=1 ruyi-qemu -L ~/RuyiSDKGames/SDLShooter/gnu-plct-venv/sysroot/ ./build/SDLShooter-Linux
+```
+![运行结果](images/2026-03-06-10-06-09.png)
