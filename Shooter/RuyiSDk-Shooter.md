@@ -107,7 +107,7 @@ env SDL_AUDIODRIVER=dummy LIBGL_ALWAYS_SOFTWARE=1 ruyi-qemu -L ~/RuyiSDKGames/SD
 ```
 ![运行结果](images/2026-03-06-10-06-09.png)
 
-## 手动制作 sysroot
+### 无法移植就手动制作 sysroot
 Ubuntu 上安装必要依赖并初始化 sysroot
 ```
 sudo apt install -y qemu-user-static dnf
