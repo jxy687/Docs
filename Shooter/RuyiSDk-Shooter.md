@@ -75,6 +75,14 @@ rsync -aHAX --numeric-ids -e "ssh -p 12055" \
   ./gnu-plct-venv/sysroot/usr/sbin/
 
 ```
+
+```
+cd $HOME/RuyiSDKGames/SDLShooter/gnu-plct-venv/sysroot
+
+find usr/lib64/cmake -name "*.cmake" -exec sed -i 's|"/usr|"${CMAKE_SYSROOT}/usr|g' {} +
+```
+
+
 - 激活虚拟环境
 ```
 source ./gnu-plct-venv/bin/ruyi-activate
@@ -95,9 +103,19 @@ cmake -DCMAKE_TOOLCHAIN_FILE=$HOME/RuyiSDKGames/SDLShooter/gnu-plct-venv/toolcha
       -DCMAKE_EXE_LINKER_FLAGS="-static-libstdc++ -static-libgcc" \
       ..
 ```
+```
+cmake -DCMAKE_TOOLCHAIN_FILE=$HOME/RuyiSDKGames/SDLShooter/gnu-plct-venv/toolchain.cmake \
+      -DCMAKE_SYSROOT=$HOME/RuyiSDKGames/SDLShooter/gnu-plct-venv/sysroot.riscv64-plct-linux-gnu \
+      -DCMAKE_EXE_LINKER_FLAGS="-static-libstdc++ -static-libgcc" \
+      ..
+```
 
 ```
 cmake -DCMAKE_TOOLCHAIN_FILE=$HOME/RuyiSDKGames/SDLShooter/gnu-plct-venv/toolchain.cmake -DCMAKE_SYSROOT=$HOME/RuyiSDKGames/SDLShooter/gnu-plct-venv/sysroot -DCMAKE_EXE_LINKER_FLAGS="-static-libstdc++ -static-libgcc" ..
+
+```
+```
+cmake -DCMAKE_TOOLCHAIN_FILE=$HOME/RuyiSDKGames/SDLShooter-Hand-Witoe/gnu-plct-venv/toolchain.cmake -DCMAKE_SYSROOT=$HOME/RuyiSDKGames/SDLShooter-Hand-Witoe/gnu-plct-venv/sysroot -DCMAKE_EXE_LINKER_FLAGS="-static-libstdc++ -static-libgcc" ..
 
 ```
 
@@ -141,12 +159,60 @@ cd ..
 
 env SDL_AUDIODRIVER=dummy LIBGL_ALWAYS_SOFTWARE=1 ruyi-qemu -L ~/RuyiSDKGames/SDLShooter/gnu-plct-venv/sysroot/ ./build/SDLShooter-Linux
 ```
+```
+cd ..
+
+env SDL_AUDIODRIVER=dummy LIBGL_ALWAYS_SOFTWARE=1 ruyi-qemu -L ~/RuyiSDKGames/SDLShooter-Hand-Witoe/gnu-plct-venv/sysroot/ ./build/SDLShooter-Linux
+```
+```
+env SDL_AUDIODRIVER=dummy LIBGL_ALWAYS_SOFTWARE=1 ruyi-qemu -L ~/RuyiSDKGames/SDLShooter/gnu-plct-venv/sysroot/ ./build/SDLShooter-Linux-hand
+```
+```
+env SDL_AUDIODRIVER=dummy LIBGL_ALWAYS_SOFTWARE=1 ruyi-qemu -L ~/RuyiSDKGames/SDLShooter-Hand/gnu-plct-venv/sysroot/ ./build/SDLShooter-Linux-hand
+```
+
+```
+env SDL_AUDIODRIVER=dummy LIBGL_ALWAYS_SOFTWARE=1 \
+    ruyi-qemu -L ~/RuyiSDKGames/SDLShooter-Hand/gnu-plct-venv/sysroot/ \
+    -E LD_LIBRARY_PATH=/usr/lib64 \
+    ./build/SDLShooter-Linux-hand
+```
 
 
+```
+env SDL_AUDIODRIVER=dummy LIBGL_ALWAYS_SOFTWARE=1 \
+    ruyi-qemu -L ~/RuyiSDKGames/SDLShooter/gnu-plct-venv/sysroot/ \
+    -E LD_LIBRARY_PATH=/usr/lib64 \
+    ./build/SDLShooter-Linux-hand
+```
+
+```
+sudo cp -a ./SDLShooter-Hand-2 ./SDLShooter-Hand-3
+```
+
+```
+env SDL_AUDIODRIVER=dummy LIBGL_ALWAYS_SOFTWARE=1 ruyi-qemu -L ~/oe-sysroot ./build/SDLShooter-Linux
+ruyi-qemu -cpu rv64 -L ~/oe-sysroot ./teeworlds_srv
+```
 
 
+![](images/2026-03-06-10-06-09.png)
 
 
+### 编译
+```
+cmake -DCMAKE_TOOLCHAIN_FILE=$PWD/../toolchain.cmake \
+      -DCMAKE_SYSROOT=$HOME/oe-sysroot \
+      -DCMAKE_EXE_LINKER_FLAGS="-static-libstdc++ -static-libgcc" \
+      ..
+```
+![](images/2026-03-06-10-24-33.png)
+显示找不到gcc，首先激活虚拟环境，然后toolchain.cmake的gcc要与虚拟环境中的匹配
 
+![](images/2026-03-06-10-28-07.png)
+显示找不到 SDL之类的，要修改配置文件
 
+find usr/lib64/cmake -name "*.cmake" -exec sed -i 's|"/usr|"${CMAKE_SYSROOT}/usr|g' {} +
 
+对于 sdl_image 要把配置文件里面的，给关上
+![](images/2026-03-06-10-44-31.png)
