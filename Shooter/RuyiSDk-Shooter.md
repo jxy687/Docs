@@ -206,6 +206,6 @@ make
 ```
 cd ..
 
-env SDL_AUDIODRIVER=dummy LIBGL_ALWAYS_SOFTWARE=1 ruyi-qemu -L ~/RuyiSDKGames/SDLShooter/gnu-plct-venv/sysroot/ ./build/SDLShooter-Linux
+env SDL_AUDIODRIVER=dummy LIBGL_ALWAYS_SOFTWARE=1 ruyi-qemu -L ~/oe-sysroot ./build/SDLShooter-Linux
 ```
 ![运行结果](images/2026-03-06-10-06-09.png)
