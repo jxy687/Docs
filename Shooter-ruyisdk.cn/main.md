@@ -2,7 +2,7 @@
 
 ## 开始
 
-获取项目
+获取项目:
 ```
 git clone https://github.com/WispSnow/SDLShooter.git
 
@@ -46,7 +46,7 @@ sudo chown -R $USER:$USER $PWD/gnu-plct-venv/sysroot && sudo chown -R $USER:$USE
 
 sudo chmod -R 775 $PWD/gnu-plct-venv/sysroot && sudo chmod -R 775 $PWD/gnu-plct-venv/sysroot.riscv64-plct-linux-gnu
 ```
-- 进入 openEuler 安装依赖
+- 进入 openEuler 安装依赖:
 ```
 sudo chroot $PWD/gnu-plct-venv/sysroot /bin/bash
 
@@ -59,12 +59,12 @@ dnf groupinstall -y "Development Tools"
 ![bash](images/2026-03-12-16-35-42.png)
 
 ### 手动编译一些依赖
-手动创建设备文件,保证 openEuler 可以成功使用 git
+手动创建设备文件,保证 openEuler 可以成功使用 git:
 ```
 mknod -m 666 /dev/urandom c 1 9
 mknod -m 666 /dev/random c 1 8
 ```
-- 克隆手动编译依赖的源码
+- 克隆手动编译依赖的源码:
 ```
 mkdir PkgDownload && cd PkgDownload
 # 克隆 libxmp 源码
@@ -78,7 +78,7 @@ git clone https://github.com/libsdl-org/SDL_ttf.git && cd SDL_ttf && git checkou
 
 git clone https://github.com/libsdl-org/SDL_image.git && cd SDL_image && git checkout SDL2
 ```
-- 分别进入克隆的依赖的目录下，如 ` cd libxmp`编译并安装
+- 分别进入克隆的依赖的目录下，如 ` cd libxmp`编译并安装:
 ```
 mkdir build && cd build
 
@@ -90,11 +90,11 @@ make install
 
 ldconfig
 ```
-- 上面的4个依赖安装完成后，退出 bash 面板
+- 上面的4个依赖安装完成后，退出 bash 面板:
 ```
 exit
 ```
-- 更改配置文件
+- 更改配置文件:
 ```
 cd $PWD/gnu-plct-venv/sysroot
 #更改SDL2.config.cmake
@@ -102,7 +102,7 @@ find usr/lib64/cmake -name "*.cmake" -exec sed -i 's|"/usr|"${CMAKE_SYSROOT}/usr
 ```
 ## 编译并运行游戏项目
 ### 编译
-进入游戏 SDLShooter 目录下
+进入游戏 SDLShooter 目录下:
 ```
 mkdir build && cd build
 # 先回到上一级
@@ -116,13 +116,13 @@ cmake -S . -B build \
 cd ./build && make
 ```
 ### 运行游戏
-- 激活虚拟环境
+- 激活虚拟环境:
 ```
 cd ..
 
 source ./gnu-plct-venv/bin/ruyi-activate
 ```
-- 运行游戏
+- 运行游戏:
 ```
 env SDL_AUDIODRIVER=dummy LIBGL_ALWAYS_SOFTWARE=1 ruyi-qemu -L $PWD/gnu-plct-venv/sysroot ./build/SDLShooter-Linuxs
 ```
