@@ -55,7 +55,9 @@ dnf install SDL2-devel freetype-devel libpng-devel wavpack-devel mesa-dri-driver
 dnf groupinstall -y "Development Tools"
 ```
 如图出现如下面板：
+
 ![bash](images/2026-03-12-16-35-42.png)
+
 ### 手动编译一些依赖
 手动创建设备文件,保证 openEuler 可以成功使用 git
 ```
@@ -125,8 +127,12 @@ source ./gnu-plct-venv/bin/ruyi-activate
 env SDL_AUDIODRIVER=dummy LIBGL_ALWAYS_SOFTWARE=1 ruyi-qemu -L $PWD/gnu-plct-venv/sysroot ./build/SDLShooter-Linuxs
 ```
 ![运行游戏](images/2026-03-12-16-20-09.png)
+
 ## 可能出现的问题
 如果在编译游戏项目的过程中有如下报错：
+
 ![报错](images/2026-03-12-16-25-14.png)
+
 需要把报错路径下的配置文件中的参数改为如下图所示：
+
 ![更改配置文件](images/2026-03-12-16-26-45.png)
