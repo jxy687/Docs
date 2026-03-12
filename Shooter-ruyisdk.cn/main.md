@@ -131,7 +131,7 @@ env SDL_AUDIODRIVER=dummy LIBGL_ALWAYS_SOFTWARE=1 ruyi-qemu -L $PWD/gnu-plct-ven
 ## 可能出现的问题
 如果在编译游戏项目的过程中有如下报错：
 
-![报错](images/2026-03-12-16-25-14.png)
+![报错](images/2026-03-12-16-45-40.png)
 
 需要把报错路径下的配置文件中的参数改为如下图所示：
 
