@@ -81,7 +81,7 @@ cmake -S . -B build \
 cd ./build && make
 ```
 ### 运行
-由于版权原因，作者并未提供游戏所需的 main.pak 和 properties 文件夹，可访问[配置文件]()进行下载并移动到build目录下：
+由于版权原因，作者并未提供游戏所需的 main.pak 和 properties 文件夹，可访问[配置文件](https://github.com/jxy687/Docs/tree/main/PVZ/file)进行下载并移动到build目录下：
 
 ![目录结构](images/2026-03-12-17-18-32.png)
 
